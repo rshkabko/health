@@ -1,0 +1,28 @@
+{
+    "name": "flamix/health",
+    "homepage": "https://github.com/rshkabko/health",
+    "description": "Check Health",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Shkabko",
+            "email": "r.shkabko@flamix.email",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "spatie/laravel-health": "^1.22"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flamix\\Health\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Flamix\\Health\\HealthProvider"
+            ]
+        }
+    }
+}
