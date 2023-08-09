@@ -26,6 +26,6 @@ class QueueRedisCheck extends Check
             return $result->warning("Do not use default redis prefix (Queue issue)! Set REDIS_PREFIX in .env!");
         }
 
-        return $result->ok('Redis OK');
+        return $result->ok();
     }
 }
