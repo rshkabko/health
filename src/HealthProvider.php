@@ -26,12 +26,16 @@ class HealthProvider extends ServiceProvider
                             foreach ($param as $inner_func => $inner_params) {
                                 $obj = call_user_func([$obj, $inner_func], $inner_params);
                             }
+                            $checks[] = $obj;
+                            unset($obj);
                         } else {
                             $obj = call_user_func([$obj, $func], $param);
                         }
                     }
 
-                    $checks[] = $obj;
+                    if ($obj ?? false) {
+                        $checks[] = $obj;
+                    }
                     continue;
                 }
 
