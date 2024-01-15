@@ -2,7 +2,6 @@
 
 namespace Flamix\Health\Checks;
 
-use Illuminate\Support\Str;
 use Illuminate\Contracts\Queue\Factory as QueueFactory;
 use Illuminate\Support\Facades\Redis;
 use Spatie\Health\Checks\Check;
@@ -41,7 +40,7 @@ class QueueCountMonitor extends Check
                 $matches[1] = 'default';
             }
 
-            // Couting...
+            // Counting...
             $queues[$matches[1]] = $connection->size($matches[1]);
         }
 
