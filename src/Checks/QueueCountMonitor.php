@@ -13,7 +13,7 @@ use Spatie\Health\Checks\Result;
  */
 class QueueCountMonitor extends Check
 {
-    private int $count = 600;
+    private ?int $count = null;
 
     public function count(int $count): self
     {
@@ -26,6 +26,10 @@ class QueueCountMonitor extends Check
         $result = Result::make();
         $manager = app(QueueFactory::class);
         $connection = $manager->connection(config('queue.default'));
+
+        if (!$this->count) {
+            $this->count(config('queue.max', 500));
+        }
 
         // Request working queue
         $running_queues = Redis::command('keys', ['queues:*']);
@@ -41,6 +45,7 @@ class QueueCountMonitor extends Check
             $queues[$matches[1]] = $connection->size($matches[1]);
         }
 
+        // General Size
         $queue_general_size = array_sum($queues ?? []);
 
         if ($queue_general_size >= $this->count / 2) {
