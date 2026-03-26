@@ -47,12 +47,12 @@ class QueueCountMonitor extends Check
         // General Size
         $queue_general_size = array_sum($queues ?? []);
 
-        if ($queue_general_size >= $this->count / 2) {
-            return $result->warning("The queue size is large, delays in the application may occur!");
+        if ($queue_general_size >= $this->count) {
+            return $result->failed("The queue size is CRITICAL. Large delays in the application. Additional processes need to be launched to process the queues! Count: {$queue_general_size}");
         }
 
-        if ($queue_general_size >= $this->count) {
-            return $result->failed("The queue size is CRITICAL. Large delays in the application. Additional processes need to be launched to process the queues!");
+        if ($queue_general_size >= $this->count / 2) {
+            return $result->warning("The queue size is large, delays in the application may occur!");
         }
 
         return $result->ok();
