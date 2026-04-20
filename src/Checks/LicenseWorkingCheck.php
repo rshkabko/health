@@ -29,7 +29,7 @@ class LicenseWorkingCheck extends Check
         if (empty($this->key))
             throw new InvalidCheck('Empty key!');
 
-        $license = Http::get('https://pr.flamix.info/rr/license/check?key=' . $this->key);
+        $license = Http::get('https://pr.flamix.info/rr/license/' . $this->key);
         return $license->ok() && $license->json('sStatus', 'ERROR') === "SUCCESS";
     }
 }
