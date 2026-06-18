@@ -19,17 +19,29 @@ class LicenseWorkingCheck extends Check
 
     public function run(): Result
     {
-        $usedDiskSpacePercentage = $this->getLicenseResponse();
+        $error = $this->getLicenseError();
         $result = Result::make();
-        return $usedDiskSpacePercentage ? $result->ok() : $result->failed("License check failed!");
+        return $error === null ? $result->ok() : $result->failed($error);
     }
 
-    protected function getLicenseResponse(): bool
+    /**
+     * Проверяем лицензию в биллинге.
+     *
+     * @return string|null null если лицензия валидна, иначе текст ошибки
+     */
+    protected function getLicenseError(): ?string
     {
         if (empty($this->key))
             throw new InvalidCheck('Empty key!');
 
-        $license = Http::get('https://pr.flamix.info/rr/license/' . $this->key);
-        return $license->ok() && $license->json('sStatus', 'ERROR') === "SUCCESS";
+        $license = Http::get('https://billing.flamix.info/rr/v1/license/' . $this->key);
+
+        if (!$license->ok())
+            return 'License server unavailable! HTTP ' . $license->status();
+
+        if ($license->json('success') === true)
+            return null;
+
+        return $license->json('message') ?? 'License check failed!';
     }
 }
